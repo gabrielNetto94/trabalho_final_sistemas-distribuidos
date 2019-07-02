@@ -10,16 +10,39 @@ import org.jgroups.View;
 
 public class Principal extends ReceiverAdapter {
     
+    /* possíveis métodos com base na análise do jogo
+    
+    1 - distribuir cartas para jogadores 
+        gerarBaralho();
+        darCartasParaJogadores() return LinkedList;
+    
+    2 - pegar uma carta do baralho para iniciar o jogo
+        inicarJogo();
+    
+    3 - jogador 1 começa
+        
+        4 - se jogador 1 tiver carta da mesma cor ou mesmo número, a carta é aceita no monte de cartas jogadas
+        5 - se não tiver carta compatível, compra uma carta (aleatória, pq as cartas vão estar ordenadas no baralho, por isso compra aletório)
+    6 - jogador 2, passo 4 novamente.
+    7 - o primeiro jogador que descartar todas as cartas primeiro, ganha a partida.
+    
+    
+    lista de cartas do baralho
+    lista de cartas jogadas 
+    lista de cartas dos jogadores
+    
+    */
+    
     JChannel channel;
     String props; // set by application
-    
     String prop; // set by application    
     
     LinkedList<Carta> baralho = new LinkedList<>();
     LinkedList<Carta> pilhaCartas = new LinkedList<>();
-    LinkedList<Carta> listaMao = new LinkedList<>();//coloar esta lista na classe Jogador
+    
     
     public Principal(){
+        //gera o baralho no construtor
         gerarBaralho();
     }
     
@@ -27,6 +50,7 @@ public class Principal extends ReceiverAdapter {
     por enquanto está gerando apenas as 4 cores com os 9 números
     */
     public void gerarBaralho(){
+        
         for (int i = 0; i < 9; i++) {
             Carta carta = new Carta("VERMELHO",i);
             baralho.add(carta);
@@ -49,23 +73,28 @@ public class Principal extends ReceiverAdapter {
     
     /*
     Pega 7 cartas aleatórias do baralho
-    Adiciona na listaMao do jogador
+    e retorna uma lista o jogador que solicitou
     */
-    public void iniciarMao() {
+    public LinkedList<Carta> iniciarMao() {
+        
+        LinkedList<Carta> listaMao = new LinkedList<>();
         
         Random random = new Random();
         
-        for (int i = 0; i < 7; i++) {
-            
+        for (int i = 0; i < 7; i++) {    
             int num = random.nextInt(baralho.size());
             Carta c = baralho.get(num);
             baralho.remove(c);
             listaMao.add(c);
         }
-
+        
+        return listaMao;
     }
 
-    public void exibirMao() {
+    /*
+    recebe uma lista como parâmetro e printa as catas
+    */
+    public void exibirMao(LinkedList<Carta> listaMao) {
         
         //cartas dadas
         System.out.print("Cartas na mão: ");
@@ -75,26 +104,12 @@ public class Principal extends ReceiverAdapter {
         System.out.println("");
     }
 
-//    public Carta percorrerMao(int numero,String cor) {
-//        Carta cartatmp = new Carta();
-//        for (int i = 0; i < listaMao.size(); i++) {
-//            if (listaMao.get(i).numero == numero && listaMao.get(i).cor.equals(cor.toLowerCase())) {
-//                //se encontrou, tira esse cara da lista e retorna o numero
-//                cartatmp = listaMao.get(i);
-//                listaMao.remove(i);
-//                return cartatmp;
-//            }
-//        }
-//        return null;
-//    }
-    
-
     private void iniciar() throws Exception {
         System.setProperty("java.net.preferIPv4Stack", "true");//desabilita ipv6, para que só sejam aceitas conexões via ipv4
         channel = new JChannel();
         channel.setReceiver(this);
-        channel.connect("ChatCluster");
-        iniciarMao();
+        channel.connect("JogoUno");
+        iniciarMao();   
         
         //jogar recebe 7 cartas
         //Carta resultado = new Carta();
@@ -102,9 +117,9 @@ public class Principal extends ReceiverAdapter {
         Scanner scanner = new Scanner(System.in);
         
         while (true) {
-            //Thread.sleep(2000);
+//            Thread.sleep(2000);
             System.out.println("Sua mão é: ");
-            exibirMao();
+//            exibirMao();
             System.out.println("jogar ou comprar?");
             String op = scanner.next();
             
@@ -125,6 +140,7 @@ public class Principal extends ReceiverAdapter {
         
                 Message msg = new Message(null, mensagem);
                 channel.send(msg);
+                
                 
             }
             else if(op.toLowerCase().equals("comprar")){
@@ -155,6 +171,7 @@ public class Principal extends ReceiverAdapter {
 //        System.out.println("ID da view: " + view_atual.getViewId().getId());
 //        System.out.println("Coordenador: " + view_atual.getCreator());
         System.out.print("Membros: ");
+        
         List<Address> membros = view_atual.getMembers();
         for (int i = 0; i < membros.size(); i++) {
             System.out.print(membros.get(i) + ", ");
