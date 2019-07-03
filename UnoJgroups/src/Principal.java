@@ -39,13 +39,14 @@ public class Principal extends ReceiverAdapter {
     
     LinkedList<Carta> baralho = new LinkedList<>();
     LinkedList<Carta> pilhaCartas = new LinkedList<>();
-    
+       
     
     public Principal(){
         //gera o baralho no construtor
         gerarBaralho();
     }
     
+    //
     /*
     por enquanto está gerando apenas as 4 cores com os 9 números
     */
