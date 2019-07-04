@@ -3,6 +3,7 @@ package Servidor;
 import Cliente.IMetodosCliente;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
@@ -118,6 +119,24 @@ public class MetodosServidor extends UnicastRemoteObject implements IMetodosServ
 
     }
 
+    
+    public void inicializa() throws RemoteException {
+        while (true) {
+            try {
+                Date horarioAtual = new Date();
+                System.out.println("Vou enviar para os clientes: " + horarioAtual.toString());
+                //invoca o enviaHorarioParaCliente em todos os clientes
+                for (IMetodosCliente cli : listaClientes) {
+                    cli.registraCliente("as");
+                }
+                //dorme por um tempo
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                System.out.println("Falhou o sleep");
+            }
+        }
+    }
+        
     public static void main(String[] args) throws Exception {
         
     }

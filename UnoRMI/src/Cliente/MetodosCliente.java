@@ -9,4 +9,8 @@ public class MetodosCliente extends UnicastRemoteObject implements IMetodosClien
 
     }
 
+    @Override
+    public void registraCliente(String msg) throws RemoteException {
+        System.out.println("oi "+msg);
+    }
 }

@@ -1,11 +1,11 @@
 package Servidor;
 
-public class Carta {
+public class Cart {
 
     public int numero;
     public String cor;
     
-    public Carta(String cor, int numero){
+    public Cart(String cor, int numero){
         this.cor = cor;
         this.numero = numero;
     }
