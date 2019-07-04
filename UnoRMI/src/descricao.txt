@@ -1,0 +1,22 @@
+ /* possíveis métodos com base na análise do jogo
+    
+    1 - distribuir cartas para jogadores 
+        gerarBaralho();
+        darCartasParaJogadores() return LinkedList;
+    
+    2 - pegar uma carta do baralho para iniciar o jogo
+        inicarJogo();
+    
+    3 - jogador 1 começa
+        
+        4 - se jogador 1 tiver carta da mesma cor ou mesmo número, a carta é aceita no monte de cartas jogadas
+        5 - se não tiver carta compatível, compra uma carta (aleatória, pq as cartas vão estar ordenadas no baralho, por isso compra aletório)
+    6 - jogador 2, passo 4 novamente.
+    7 - o primeiro jogador que descartar todas as cartas primeiro, ganha a partida.
+    
+    
+    lista de cartas do baralho
+    lista de cartas jogadas 
+    lista de cartas dos jogadores
+    
+     */
