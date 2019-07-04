@@ -1,3 +1,5 @@
+package Cliente;
+
 public class Carta {
 
     public int numero;
