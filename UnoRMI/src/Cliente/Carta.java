@@ -1,6 +1,9 @@
 package Cliente;
 
-public class Carta {
+import java.io.Serializable;
+import java.rmi.server.UnicastRemoteObject;
+
+public class Carta implements Serializable{
 
     public int numero;
     public String cor;

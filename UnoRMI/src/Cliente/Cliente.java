@@ -1,55 +1,50 @@
 package Cliente;
 
 import Servidor.IMetodosServidor;
-import static java.lang.Thread.sleep;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Cliente {
 
-    MetodosCliente cliente;
-    IMetodosServidor servidor;
+    public static void main(String[] args) {
+        LinkedList<Carta> cartasMao = new LinkedList<>();
+        Scanner scan = new Scanner(System.in);
 
-    LinkedList<Carta> cartasMao = new LinkedList<>();
-
-    public Cliente() {
         try {
-            conectar();
-            cartasMao = servidor.iniciarMao();
-            mostraMao(cartasMao);
-        } catch (RemoteException ex) {
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+            IMetodosServidor servidor = (IMetodosServidor) Naming.lookup("rmi://localhost/MetodosServidor");
+            MetodosCliente cliente = new MetodosCliente();
+            servidor.registraCliente(cliente);
 
-//    private void conectar() {
-//
-//        try {
-//            servidor = (IMetodosServidor) Naming.lookup("rmi://localhost/MetodosServidor");
-//            cli = new MetodosCliente();
-//            //servidor.registraCliente(cli, nick);
-//            
-//
-//        } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-//            System.out.println("erro");
-//        }
-//    }
-    public void mostraMao(LinkedList<Carta> cartas) {
-        System.out.print("Cartas: ");
-        for (Carta carta : cartas) {
-            System.out.print(carta.cor + " - " + carta.numero + "     ");
-        }
-    }
+            cartasMao = servidor.receberCartaServidor();
+            cliente.mostraMao(cartasMao);
+            
+            System.out.println("Última carta jogada: "+servidor.getCartaTopo().numero+" - "+servidor.getCartaTopo().cor);
+            
+            boolean flag = false;
+//            int i = 0;
+            while (flag == false){                    
+                System.out.println("\nDigite o número da carta para jogar: ");
+                int numCarta = scan.nextInt();
 
-    public void conectar() {
-        try {
-            servidor = (IMetodosServidor) Naming.lookup("rmi://localhost/MetodosServidor");
-            cliente = new MetodosCliente();
+                if (cartasMao.get(numCarta).numero == servidor.getCartaTopo().numero || cartasMao.get(numCarta).cor == servidor.getCartaTopo().cor) {
+                    System.out.println("Carta Jogada");
+                    servidor.setCartaTopo(cartasMao.get(numCarta));
+                    cartasMao.remove(numCarta);
+                    System.out.println("Última carta jogada: "+servidor.getCartaTopo().numero+" - "+servidor.getCartaTopo().cor);
+                    cliente.mostraMao(cartasMao);
+                    
+                    flag = true;
+                }else{
+                    System.out.println("Carta inválida");
+                }
+            }
+                
 
         } catch (NotBoundException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,9 +54,4 @@ public class Cliente {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public static void main(String[] args) {
-
-    }
-
 }

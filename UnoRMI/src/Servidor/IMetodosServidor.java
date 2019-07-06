@@ -7,7 +7,8 @@ import java.util.LinkedList;
 
 public interface IMetodosServidor extends Remote {
 
-    public LinkedList<Cliente.Carta> iniciarMao() throws RemoteException;
-    public void registraCliente(IMetodosCliente refCliente,String nome) throws RemoteException;
-    
+    public LinkedList<Cliente.Carta> receberCartaServidor() throws RemoteException;
+    public void registraCliente(IMetodosCliente refCliente) throws RemoteException;
+    public Cliente.Carta getCartaTopo() throws RemoteException;
+    public void setCartaTopo(Cliente.Carta carta) throws RemoteException;
 }
