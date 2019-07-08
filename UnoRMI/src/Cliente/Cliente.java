@@ -32,7 +32,7 @@ public class Cliente {
                 System.out.println("\nDigite o número da carta para jogar: ");
                 int numCarta = scan.nextInt();
 
-                if (cartasMao.get(numCarta).numero == servidor.getCartaTopo().numero || cartasMao.get(numCarta).cor == servidor.getCartaTopo().cor) {
+                if (cartasMao.get(numCarta).numero == servidor.getCartaTopo().numero || cartasMao.get(numCarta).cor.equals(servidor.getCartaTopo().cor)) {
                     System.out.println("Carta Jogada");
                     servidor.setCartaTopo(cartasMao.get(numCarta));
                     cartasMao.remove(numCarta);
