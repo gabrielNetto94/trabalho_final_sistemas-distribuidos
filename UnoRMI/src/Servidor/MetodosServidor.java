@@ -9,7 +9,7 @@ import java.util.Scanner;
 import org.jgroups.Message;
 
 public class MetodosServidor extends UnicastRemoteObject implements IMetodosServidor {
-
+    
     LinkedList<Cliente.Carta> baralho = new LinkedList<>();
     LinkedList<Cliente.Carta> pilhaCartasJogadas = new LinkedList<>();
     LinkedList<IMetodosCliente> listaClientes = new LinkedList<>();
