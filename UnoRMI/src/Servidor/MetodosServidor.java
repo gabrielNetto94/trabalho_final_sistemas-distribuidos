@@ -5,9 +5,11 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MetodosServidor extends UnicastRemoteObject implements IMetodosServidor {
-    
+
     LinkedList<Cliente.Carta> baralho = new LinkedList<>();
     LinkedList<Cliente.Carta> pilhaCartasJogadas = new LinkedList<>();
     LinkedList<IMetodosCliente> listaClientes = new LinkedList<>();
@@ -26,7 +28,7 @@ public class MetodosServidor extends UnicastRemoteObject implements IMetodosServ
         System.out.println("Cliente conectado!");
         System.out.println("Número de clientes: " + listaClientes.size());
     }
-    
+
     @Override
     public LinkedList<Cliente.Carta> receberCartaServidor() throws RemoteException {
 
@@ -49,26 +51,37 @@ public class MetodosServidor extends UnicastRemoteObject implements IMetodosServ
     public void setCartaTopo(Cliente.Carta carta) throws RemoteException {
         pilhaCartasJogadas.push(carta);
     }
-    
+
     @Override
     public void finalizaJogada() {
-        //
+        try {
+            listaClientes.getFirst().setPodeJogar(false);
+        } catch (RemoteException ex) {
+            Logger.getLogger(MetodosServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     @Override
-    public Cliente.Carta comprarCarta(){
+    public Cliente.Carta comprarCarta() {
         Cliente.Carta carta = baralho.get(random.nextInt(baralho.size()));
         baralho.remove(carta);
         return carta;
     }
 
-//    public void mostraBaralho(LinkedList<Cliente.Carta> baralho){
-//        System.out.print("Cartas => ");
-//        for(Cliente.Carta c:baralho){
-//            System.out.print(c.cor+" - "+c.numero+"   ");
-//        }
-//    }
-    
+    //pega uma carta do baralho e coloca na pilha de cartas jogadas, e seta a true no "setPordeJogar" do primeiro cliente
+    public void iniciarJogo() {
+
+        try {
+            listaClientes.getFirst().setPodeJogar(true);
+        } catch (RemoteException ex) {
+            Logger.getLogger(MetodosServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Cliente.Carta c = baralho.get(random.nextInt(baralho.size()));
+        pilhaCartasJogadas.push(c);
+        baralho.remove(c);
+    }
+   
     //por enquanto está gerando apenas as 4 cores com os 9 números
     public void gerarBaralho() {
 
@@ -90,12 +103,4 @@ public class MetodosServidor extends UnicastRemoteObject implements IMetodosServ
             baralho.add(carta);
         }
     }
-
-    //pega uma carta do baralho e coloca na pilha de cartas jogadas
-    public void iniciarJogo() {
-        Cliente.Carta c = baralho.get(random.nextInt(baralho.size()));
-        pilhaCartasJogadas.push(c);
-        baralho.remove(c);
-    }
-
 }
