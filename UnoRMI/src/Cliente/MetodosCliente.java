@@ -6,13 +6,19 @@ import java.util.LinkedList;
 
 public class MetodosCliente extends UnicastRemoteObject implements IMetodosCliente {
 
+    boolean permissao = false;
+    
     public MetodosCliente() throws RemoteException {
 
     }
 
     @Override
-    public void testeCliente(String msg) {
-        System.out.println(msg);
+    public void setPodeJogar(boolean flag){
+        this.permissao = flag;
+    }
+    
+    public boolean getPodeJogar(){
+        return this.permissao;
     }
     
     public void mostraMao (LinkedList<Carta> cartas){
