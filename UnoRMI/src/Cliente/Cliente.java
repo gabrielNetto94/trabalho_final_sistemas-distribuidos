@@ -20,19 +20,19 @@ public class Cliente {
             IMetodosServidor servidor = (IMetodosServidor) Naming.lookup("rmi://localhost/MetodosServidor");
             MetodosCliente cliente = new MetodosCliente();
             servidor.registraCliente(cliente);
-
+            
             cartasMao = servidor.receberCartaServidor();
             cliente.mostraMao(cartasMao);
-
+            
             System.out.println("Última carta jogada: " + servidor.getCartaTopo().numero + " - " + servidor.getCartaTopo().cor);
 
-            if (cliente.getPodeJogar()) {
+//            if (cliente.getPodeJogar()) {
                 boolean flag = false;
 
-                while (flag == false) {
+                while (!flag) {
 
                     int op = 0;
-                    System.out.println("1 - Jogar Carta // 2 - Comprar Carta");
+                    System.out.print("1 - Jogar Carta // 2 - Comprar Carta: ");
                     op = scan.nextInt();
 
                     if (op == 1) {
@@ -58,16 +58,16 @@ public class Cliente {
 
                     }
                     if (op == 2) {
-                        Carta carta = servidor.comprarCarta();
-                        System.out.println("Carta comprada -> " + carta.cor + " - " + carta.numero);
-                        cartasMao.add(carta); //compra carta
+                        cartasMao.addAll(servidor.comprarCarta(1));//comprarCarta retorna uma lista fica escalável para comprar 1, 2 ou 4 cartas =)
+                        System.out.println("Carta comprada -> " + cartasMao.getLast().cor + " - " + cartasMao.getLast().numero);
+                        
                         cliente.mostraMao(cartasMao);
                         servidor.finalizaJogada();//indica para o servidor que terminou a jogada e passa para o próxima cliente
                         flag = true;
                     }
 
                 }
-            } // fim cliente.getPodeJogar();
+//            } // fim cliente.getPodeJogar();
 
         } catch (NotBoundException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);

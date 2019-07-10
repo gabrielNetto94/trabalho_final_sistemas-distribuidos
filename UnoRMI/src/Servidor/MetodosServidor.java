@@ -61,27 +61,42 @@ public class MetodosServidor extends UnicastRemoteObject implements IMetodosServ
         }
     }
 
+    //parâmetro numCartas, número de cartas para comprar +1, +2 ou +4
     @Override
-    public Cliente.Carta comprarCarta() {
-        Cliente.Carta carta = baralho.get(random.nextInt(baralho.size()));
-        baralho.remove(carta);
-        return carta;
+    public LinkedList<Cliente.Carta> comprarCarta(int numCartas) {
+
+        LinkedList<Cliente.Carta> cartasCompradas = new LinkedList<>();
+
+        for (int i = 0; i < numCartas; i++) {
+            Cliente.Carta carta = baralho.get(random.nextInt(baralho.size()));
+            cartasCompradas.add(carta);
+            baralho.remove(carta);
+        }
+
+        return cartasCompradas;
     }
 
     //pega uma carta do baralho e coloca na pilha de cartas jogadas, e seta a true no "setPordeJogar" do primeiro cliente
     public void iniciarJogo() {
 
-        try {
-            listaClientes.getFirst().setPodeJogar(true);
-        } catch (RemoteException ex) {
-            Logger.getLogger(MetodosServidor.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        /*
+        boolean flag = false;
 
-        Cliente.Carta c = baralho.get(random.nextInt(baralho.size()));
+        while (!flag) {
+            if (listaClientes.isEmpty()) { //se a lista de clientes estiver vazia dorme 1s e testa de novo, se não executa o else
+                Thread.sleep(1000);
+            } else {
+        
+        listaClientes.getFirst().setPodeJogar(true);//autoriza o cliente a jogar
+ */
+        Cliente.Carta c = baralho.get(random.nextInt(baralho.size()));//pega 1 carta do baralho para 
         pilhaCartasJogadas.push(c);
         baralho.remove(c);
+//                flag = true;
+//            }
+//        }
     }
-   
+
     //por enquanto está gerando apenas as 4 cores com os 9 números
     public void gerarBaralho() {
 

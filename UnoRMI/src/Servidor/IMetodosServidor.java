@@ -12,6 +12,6 @@ public interface IMetodosServidor extends Remote {
     public Cliente.Carta getCartaTopo() throws RemoteException;
     public void setCartaTopo(Cliente.Carta carta) throws RemoteException;
     public void finalizaJogada() throws RemoteException;
-    public Cliente.Carta comprarCarta() throws RemoteException;
+    public LinkedList<Cliente.Carta> comprarCarta(int numeroCartas) throws RemoteException;
     
 }
